@@ -1,4 +1,4 @@
-from app import app, mysql, api, db
+from app import app, api, db
 
 class Departamento(db.Model):
 
@@ -8,6 +8,7 @@ class Departamento(db.Model):
     nombre = db.Column(db.String, nullable=False)
     ubicacion = db.Column(db.String, nullable=False)
     superficie = db.Column(db.String, nullable=False)
+    pronvincias = db.relationship('Provincia', backref='departamento', lazy='dynamic')
 
     def __init__(self, nombre, ubicacion, superficie):
         self.nombre = nombre
@@ -24,10 +25,5 @@ class Provincia(db.Model):
     nombre = db.Column(db.String, nullable=False)
     Departamento_idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'))
 
-    def __init__(self, nombre, ubicacion, superficie):
-        self.nombre = nombre
-        self.ubicacion = ubicacion
-        self.superficie = superficie
-
     def __repr__(self):
-        return '<Departamento %r>' % (self.nombre)
+        return '<Provincia %r>' % (self.nombre)

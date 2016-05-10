@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<!-- Main -->
+<div id="main" class="wrapper style2">
+  <div class="container">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <div id="sidebar" class="4u">
+        <section>
+          <header class="major">
+            <h2>{{ producto }}</h2>
+          </header>
+          <ul class="default">
+            <li><a href="#">Historia</a></li>
+            <li><a href="#">Valor Nutricional</a></li>
+            <li><a href="#">Precio</a></li>
+            <li><a href="#">Cosecha</a></li>
+          </ul>
+        </section>
+
+      </div>
+
+      <!-- Content -->
+      <div id="content" class="8u skel-cell-important">
+        <section>
+          <header class="major">
+            <h2>Historia</h2>
+            <span class="byline">El producto de los dioses...
+            <a href="#">Kiwicha</a></span>
+          </header>
+          {% if producto == "quinua" %}
+          <p>La quinua es una planta andina procedente de los alrededores del lago Titicaca, ubicado en Perú y Bolivia. Las teorías sobre el origen de la quinua son disímiles. Según evidencias arqueológicas del norte chileno, por ejemplo, la quinua fue utilizada 3 000 años antes de Cristo, mientras que hallazgos en la zona de Ayacucho, en el Perú, indicarían que la domesticación de la quinua ocurrió incluso 2 mil años antes.</p>
+          <p>Sin embargo, son pocas las evidencias arqueológicas, lingüísticas, etnográficas e históricas sobre la quinua. Por el contrario, sí existen evidencias claras de la distribución de los parientes silvestres, lo que posiblemente demuestra que su domesticación tomó mucho tiempo, en un proceso que probablemente se inició como una planta usada por sus hojas en la alimentación y luego por las semillas. Posteriormente, la especie fue adaptada a diferentes condiciones agroclimáticas, haciendo que la planta presente una amplia adaptación desde el nivel del mar hasta los 4 000 msnm.</p>
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from flask import render_template, url_for, redirect
-from flask_restful import Resource, Api, reqparse
-from app import app, mysql, api, db
+from app import app, mysql, db, conn
 from .model import Departamento, Provincia
+from .resources import GetDepartamentos, GetProvincias
 
 @app.route('/')
 @app.route('/home')
@@ -10,26 +10,23 @@ def homepage():
 
 @app.route('/dep')
 def departament():
-    try:
-#        conn = mysql.connect()
-#        cursor = conn.cursor()
-#        cursor.execute('''SELECT * from departamento;''')
-#        data = cursor.fetchall()
-        data = Departamento.query.all()
-        regions = []
-        for item in data:
-            i = {
-                'Id' : item.idDepartamento,
-                'Departamento' : item.nombre,
-                'Descripcion' : item.ubicacion,
-                'Superficie' : item.superficie
-            }
-            regions.append(i)
 
-        return render_template("departament.html", regions = regions)
-    except Exception as e:
-        return render_template("main.html", error = e)
+    cursor = conn.cursor()
+    cursor.callproc('ir_obtenerDepart')
+    data = cursor.fetchall()
+#        data = Departamento.query.all()
+    regions = []
+    for item in data:
+        i = {
+            'Id' : item[0], #item.idDepartamento,
+            'Departamento' : item[1], #item.nombre,
+            'Descripcion' : item[2], #item.ubicacion,
+            'Superficie' : item[3] #item.superficie
 
+        }
+        regions.append(i)
+
+    return render_template("departament.html", regions = regions)
 
 @app.route('/prov/<int:dep_id>')
 def provincias(dep_id):
@@ -51,24 +48,25 @@ def provincias(dep_id):
         f = f + 1
     return render_template("provincias.html", regions = regions)
 
-class GetDepartamentos(Resource):
-    def get(self):
-        try:
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            cursor.execute('''SELECT * from departamento;''')
-            data = cursor.fetchall()
-            regions_list = []
-            for item in data:
-                i = {
-                    'Id':item[0],
-                    'Departamento':item[1],
-                    'Superficie':item[3]
-                }
-                regions_list.append(i)
+@app.route('/prov2')
+def provincias2():
 
-            return {'StatusCode':'200','regions':regions_list}
-        except Exception as e:
-            return {'error': str(e)}
+    data = Provincia.query.filter_by(Departamento_idDepartamento=2)
+    regions = []
+    f = 1
+    for item in data:
+        i = {
+            #'Id' : item.idDepartamento,
+            'Id' : item.idProvincia,
+            'Numero' : f,
+            'Nombre' : item.nombre,
 
-api.add_resource(GetDepartamentos, '/getDepartamentos')
+        }
+        regions.append(i)
+        f = f + 1
+    return render_template("provincias.html", regions = regions)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

@@ -1,0 +1,8 @@
+.image.cuadro {
+  display: block;
+}
+
+  .image.cuadro img {
+    display: block;
+    width: 100%;
+  }
