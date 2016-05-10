@@ -1,0 +1,5 @@
+MYSQL_DATABASE_USER = 'root'
+MYSQL_DATABASE_PASSWORD = 'rootjf'
+MYSQL_DATABASE_DB = 'inforuraldb'
+MYSQL_DATABASE_HOST = 'localhost'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:rootjf@localhost/inforuraldb'

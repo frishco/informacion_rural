@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Departamentos del Peru</h3>
+
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Nombre</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+                    {% for region in regions %}
+                    <tr>
+											<td>{{ region.Numero }}</td>
+											<td>{{ region.Nombre }}</td>
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}
