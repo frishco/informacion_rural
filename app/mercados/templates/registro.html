@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% macro render_field(field, placeholder=None) %}
+{% if field.errors %}
+<div>
+{% elif field.flags.error %}
+<div>
+{% else %}
+<div>
+{% endif %}
+    {% set css_class = 'form-control ' + kwargs.pop('class', '') %}
+    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+</div>
+{% endmacro %}
+  <div class="wrapper style4">
+    <section class="container">
+
+      <form method="POST" action="/mercados/registro" accept-charset="UTF-8" role="form">
+        {{ form.csrf_token }}
+        {{ render_field(form.nombre, placeholder="Nombre del mercado",
+                                    autofocus="") }}
+
+        {{ render_field(form.capacidad, placeholder="Capacidad") }}
+        <br>
+        <button class="button alt" type="submit" name="submit">Registro</button>
+      </form>
+    </section>
+  </div>
+
+{% endblock %}

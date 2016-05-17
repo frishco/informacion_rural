@@ -27,3 +27,15 @@ class Provincia(db.Model):
 
     def __repr__(self):
         return '<Provincia %r>' % (self.nombre)
+
+class Ciudad(db.Model):
+    __tablename__ = "ciudad"
+
+    idCiudad = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String, nullable=False)
+    latitud = db.Column(db.String, nullable=False)
+    longitud = db.Column(db.String, nullable=False)
+    Provincia_idProvincia = db.Column(db.Integer, db.ForeignKey('provincia.idProvincia'))
+
+    def __repr__(self):
+        return '<Distrito %r>' % (self.nombre)

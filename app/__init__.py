@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
 from flask.ext.sqlalchemy import SQLAlchemy
 from .productos.controller import productos
+from .mercados.controller import mercados
 
 app = Flask(__name__)
 #configuracion
@@ -19,7 +20,7 @@ api = Api(app)
 #Blueprint
 
 app.register_blueprint(productos)
-
+app.register_blueprint(mercados)
 
 
 from app import controller, model, resources

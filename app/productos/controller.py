@@ -7,13 +7,13 @@ productos = Blueprint('productos', __name__,
 def historia(producto):
     return render_template("historia.html" , producto = producto)
 
-@productos.route('/<producto>/historia')
+@productos.route('/<producto>/vnutricional')
 def vnutricional(producto):
-    return render_template("historia.html" , producto = producto)
+    return render_template("vnutricional.html" , producto = producto)
 
 @productos.route('/<producto>/historia')
 def precio(producto):
-    return render_template("historia.html" , producto = producto)
+    return render_template("precio.html" , producto = producto)
 
 @productos.route('/<producto>/historia')
 def cosecha(producto):
