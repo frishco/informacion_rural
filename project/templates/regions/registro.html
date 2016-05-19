@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from 'macros.html' import render_field %}
+
+{% block body %}
+
+  <div class="wrapper style4">
+    <section class="container">
+      <h1> Ciudad </h1>
+      <form action="{{ form_action }}" method="{{ method | d("POST") }}" class="form-control">
+        {{ form.csrf_token }}
+        {% for field in form %}
+            {{ render_field(field) }}
+        {% endfor %}
+        <br>
+        <button class="button alt" type="submit" name="submit">Guardar</button>
+      </form>
+    </section>
+  </div>
+
+{% endblock %}

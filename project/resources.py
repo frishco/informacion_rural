@@ -1,5 +1,5 @@
 from flask_restful import Resource, Api
-from app import mysql, api, conn
+from project import mysql, api, conn
 
 class GetDepartamentos(Resource):
     def get(self):

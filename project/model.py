@@ -1,4 +1,4 @@
-from app import app, api, db
+from project import db
 
 class Departamento(db.Model):
 
@@ -16,7 +16,7 @@ class Departamento(db.Model):
         self.superficie = superficie
 
     def __repr__(self):
-        return '<Departamento %r>' % (self.nombre)
+        return  (self.nombre)
 
 class Provincia(db.Model):
     __tablename__ = "provincia"
@@ -26,7 +26,7 @@ class Provincia(db.Model):
     Departamento_idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'))
 
     def __repr__(self):
-        return '<Provincia %r>' % (self.nombre)
+        return (self.nombre)
 
 class Ciudad(db.Model):
     __tablename__ = "ciudad"
@@ -36,6 +36,12 @@ class Ciudad(db.Model):
     latitud = db.Column(db.String, nullable=False)
     longitud = db.Column(db.String, nullable=False)
     Provincia_idProvincia = db.Column(db.Integer, db.ForeignKey('provincia.idProvincia'))
+
+    def __init__(self, nombre, latitud, longitud, Provincia_idProvincia):
+        self.nombre = nombre
+        self.latitud = latitud
+        self.longitud = longitud
+        self.Provincia_idProvincia = Provincia_idProvincia
 
     def __repr__(self):
         return '<Distrito %r>' % (self.nombre)

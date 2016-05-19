@@ -4,7 +4,7 @@
 
 <div class="wrapper style2">
 				<section class="container">
-          <h3>Departamentos del Peru</h3>
+          <h3>Provincias de {{ departamento }} </h3>
 
 							<div class="table-wrapper">
 								<table>
@@ -12,6 +12,7 @@
 										<tr>
 											<th>Id</th>
 											<th>Nombre</th>
+											<th></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -21,6 +22,7 @@
                     <tr>
 											<td>{{ region.Numero }}</td>
 											<td>{{ region.Nombre }}</td>
+											<td><a href="/ciudades/{{ region.Id}}"> Ver detalle </a></td>
                     </tr>
                     {% endfor %}
 

@@ -10,6 +10,13 @@
 /* Cuadro */
 
 
+.form-control .field{
+    margin-bottom: 10px;
+
+}
+.form-control .field .error{
+    color: red
+}
   .image.cuadro img {
     display: block;
     height: 220px;

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Ciudades de {{ provincia }} </h3>
+          <a href="/prov/{{ provincia.Departamento_idDepartamento }}"> Atras </a>
+          <br>
+
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>N</th>
+											<th>Nombre</th>
+											<th>Latitud</th>
+                      <th>Longitud</th>
+                      <th>+</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+                    {% for region in regions %}
+                    <tr>
+											<td>{{ region.Numero }}</td>
+											<td>{{ region.Nombre }}</td>
+                      <td>{{ region.Latitud }}</td>
+											<td>{{ region.Longitud }}</td>
+											<td><a href="/ciudad/{{ region.Id}}"> Editar </a></td>
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}

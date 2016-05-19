@@ -1,9 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from flask.ext.mysql import MySQL
 from flask.ext.sqlalchemy import SQLAlchemy
 from .productos.controller import productos
-from .mercados.controller import mercados
+#from .mercados.controller import mercados
+
+import os
+
+
 
 app = Flask(__name__)
 #configuracion
@@ -17,10 +21,10 @@ conn = mysql.connect()
 db = SQLAlchemy(app)
 # Api congig
 api = Api(app)
+
+
+from project import controller, model, resources
+
 #Blueprint
-
 app.register_blueprint(productos)
-app.register_blueprint(mercados)
-
-
-from app import controller, model, resources
+#app.register_blueprint(mercados)

@@ -1,4 +1,7 @@
 # Credenciales de Mysql
+import os
+
+
 
 MYSQL_DATABASE_USER = 'root'
 MYSQL_DATABASE_PASSWORD = 'rootjf'
