@@ -16,5 +16,27 @@
       </form>
     </section>
   </div>
+<script>
+$("#departamento").change(function() {
+  var dep_id = $(this).find(":selected").val();
+  //alert(dep_id);
+  var request = $.ajax({
+        type: 'GET',
+        url: '/getProvincias/' + dep_id ,
+    });
+    request.done(function(data){
+        
+        $("#provincia").empty();
+        for (var i = 0; i < data.regions.length; i++) {
+            //alert(data.regions[i].Nombre)
+            $("#provincia").append(
+                $("<option></option>").attr(
+                    "value", data.regions[i].Id).text(data.regions[i].Nombre)
+            );
+        }
+    });
+});
+
+</script>
 
 {% endblock %}

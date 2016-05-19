@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Mercados</h3>
+					<div class="add">
+						<ul class="add">
+							<li><a href="{{ url_for('registro_mercado') }}" class="fa fa-plus-circle" ><span>Agregar mercado</span></a></li></ul>
+					</div>
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>Nombre</th>
+											<th>Capacidad</th>
+											<th>Ciudad</th>
+											<th>Editar</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+                    {% for mercado in mercados %}
+                    <tr>
+
+											<td>{{ mercado.Nombre }}</td>
+											<td>{{ mercado.Capacidad }}</td>
+											<td>{{ mercado.Ciudad_idCiudad }}</td>
+											<td>
+												<ul class="tabla">
+												<li><a href="/mercados/edit/{{ mercado.Id}}" class="fa fa-pencil"></a></li>
+												<li><a href="/mercados/delete/{{ mercado.Id}}" class="fa fa-minus-circle"></a></li></ul>
+											</td>
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}

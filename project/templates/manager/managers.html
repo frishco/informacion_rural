@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Managers</h3>
+					<div class="add">
+						<ul class="add">
+							<li><a href="{{ url_for('registro_form') }}" class="fa fa-user-plus" ><span>Agregar encuestador</span></a></li></ul>
+					</div>
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>Nombre</th>
+											<th>Email</th>
+											<th>Rol</th>
+											<th>Editar</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+                    {% for manager in managers %}
+                    <tr>
+
+											<td>{{ manager.Nombre }} {{ manager.Apellido }}</td>
+											<td>{{ manager.Email }}</td>
+											<td>{{ manager.Rol }}</td>
+											<td>
+												<ul class="tabla">
+												<li><a href="/manager/edit/{{ manager.Id}}" class="fa fa-pencil"></a></li>
+												<li><a href="/manager/delete/{{ manager.Id}}" class="fa fa-minus-circle"></a></li></ul>
+											</td>
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}

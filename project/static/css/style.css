@@ -8,7 +8,75 @@
 */
 
 /* Cuadro */
+ul.add {
+  cursor: default;
+  padding-bottom: 1.5em;
+}
 
+  ul.add li {
+    display: inline-block;
+    line-height: 1em;
+    padding: 0.5em 1em;
+  }
+
+    ul.add li:first-child {
+      padding-left: 0;
+    }
+
+    ul.add li span {
+      display: none;
+    }
+
+    ul.add li a {
+      text-decoration: none;
+      font-size: 2em;
+      color: inherit;
+      opacity: 0.2;
+      -moz-transition: all 0.35s ease-in-out;
+      -webkit-transition: all 0.35s ease-in-out;
+      -o-transition: all 0.35s ease-in-out;
+      -ms-transition: all 0.35s ease-in-out;
+      transition: all 0.35s ease-in-out;
+    }
+
+    ul.add li a:hover {
+      color: inherit;
+      opacity: 1;
+    }
+    ul.tabla {
+      cursor: default;
+    }
+
+      ul.tabla li {
+        display: inline-block;
+        line-height: 1em;
+        padding: 0.5em 0.5em;
+      }
+
+        ul.tabla li:first-child {
+          padding-left: 0;
+        }
+
+        ul.tabla li span {
+          display: none;
+        }
+
+        ul.tabla li a {
+          text-decoration: none;
+          font-size: 1.5em;
+          color: inherit;
+          opacity: 0.2;
+          -moz-transition: all 0.35s ease-in-out;
+          -webkit-transition: all 0.35s ease-in-out;
+          -o-transition: all 0.35s ease-in-out;
+          -ms-transition: all 0.35s ease-in-out;
+          transition: all 0.35s ease-in-out;
+        }
+
+        ul.tabla li a:hover {
+          color: inherit;
+          opacity: 1;
+        }
 
 .form-control .field{
     margin-bottom: 10px;

@@ -73,8 +73,20 @@
 									<li><a href="/dep">Departamentos</a></li>
 									<li><a href="/prov2">Noticias</a></li>
 									<li><a href="right-sidebar.html">Clima</a></li>
-									<li><a href="no-sidebar.html">Calculadora</a></li>
-									<li><a href="no-sidebar.html">Log in</a></li>
+									{% if current_user.is_authenticated %}
+									<li><a href="{{ url_for('managers') }}">Encuestadores</a></li>
+									<li><a href="{{ url_for('mercados') }}">Mercados</a></li>
+									<li><a href="">Precio</a></li>
+									<li><a href="{{ url_for('profile') }}">{{ current_user.nombre }} {{ current_user.apellido }}</a>
+										<ul>
+											<li><a href="{{ url_for('profile') }}">Datos</a></li>
+											<li><a href="{{ url_for('logout') }}">Log out</a></li>
+										</ul>
+									</li>
+									{% endif %}
+									{% if not current_user.is_authenticated %}
+									<li><a href="{{ url_for('login') }}">Log in</a></li>
+									{% endif %}
 								</ul>
 							</nav>
 
@@ -84,9 +96,10 @@
 			<!-- Banner -->
 				<div id="banner">
 					<section class="container">
-						<h2>Info rural</h2>
+						<h2>Maipin Qhatu?</h2>
 
-						<p>El lugar que te permite encontrar la informacion que buscas</p>
+						<p>{% if current_user.is_authenticated %} Bienvenido {{ current_user.nombre }} {{ current_user.apellido }}! {% endif %}
+							El lugar que te permite encontrar la informacion del mercado que buscas</p>
 					</section>
 				</div>
 

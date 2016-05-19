@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style4">
+  <section class="container">
+    <header class="major">
+      <h2>Estimado Administrador </h2>
+      <span class="byline">Estas sus datos.</span>
+    </header>
+    <div class="row flush">
+      <div class="4u">
+        <ul class="special-icons">
+          <li>
+            <span class="fa fa-user"></span>
+            <h3>Nombre</h3>
+            <p> {{ current_user.nombre }} </p>
+          </li>
+          <li>
+            <span class="fa fa-envelope"></span>
+            <h3>Email</h3>
+            <p> {{ current_user.email }} </p>
+          </li>
+          <li>
+            <span class="fa fa-sign-out" ></span>
+            <h3>Log out</h3>
+            <a  href="{{ url_for('logout') }}"><p>Cerrar Sesión.</p></a>
+          </li>
+        </ul>
+      </div>
+      <div class="4u">
+        .
+      </div>
+
+      <div class="4u">
+        <ul class="special-icons">
+          <li>
+            <span class="fa fa-user"></span>
+            <h3>Apellido</h3>
+            <p>{{ current_user.email }}</p>
+          </li>
+          <li>
+            <span class="fa fa-lock"></span>
+            <h3>Rol</h3>
+            <p>{{ current_user.role }}</p>
+          </li>
+
+          <li>
+            <span class="fa fa-leaf"></span>
+            <h3>Maipin Qhatu?</h3>
+            <p>Donde esta mercado?</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
