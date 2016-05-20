@@ -5,7 +5,11 @@
 <div class="wrapper style2">
 				<section class="container">
           <h3>Ciudades de {{ provincia }} </h3>
-          <a href="/prov/{{ provincia.Departamento_idDepartamento }}"> Atras </a>
+					<ul class="add">
+						<li><a href="{{ url_for('provincias', dep_id = provincia.Departamento_idDepartamento) }}"class="fa fa-arrow-left"><span>Atras</span></a></li>
+						<li><a href="{{ url_for('update_latlog_prov', prov_id = provincia.idProvincia) }}"class="fa fa-location-arrow"><span>Agregar Locations</span></a></li>
+					</ul>
+
           <br>
 
 							<div class="table-wrapper">
@@ -16,7 +20,7 @@
 											<th>Nombre</th>
 											<th>Latitud</th>
                       <th>Longitud</th>
-                      <th>+</th>
+                      <th>Editar / Ubicacion</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -28,7 +32,9 @@
 											<td>{{ region.Nombre }}</td>
                       <td>{{ region.Latitud }}</td>
 											<td>{{ region.Longitud }}</td>
-											<td><a href="/ciudad/{{ region.Id}}"> Editar </a></td>
+											<td><ul class="tabla">
+											<li><a href="{{ url_for('edit_ciudad', ciudad_id = region.Id ) }}" class="fa fa-pencil"></a></li>
+											<li><a href="{{ url_for('update_latlog', ciudad_id = region.Id ) }}" class="fa fa-location-arrow"></a></li></ul></td>
                     </tr>
                     {% endfor %}
 

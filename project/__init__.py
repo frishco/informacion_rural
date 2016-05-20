@@ -28,7 +28,7 @@ db = SQLAlchemy(app)
 api = Api(app)
 
 
-from project import controller, model, resources
+from project import controller, model, resources, importapi
 
 #Blueprint
 app.register_blueprint(productos)

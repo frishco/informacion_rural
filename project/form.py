@@ -5,20 +5,25 @@
 from flask.ext.wtf import Form # , RecaptchaField
 
 # Import Form elements such as StringField and BooleanField (optional)
-from wtforms import StringField, PasswordField, SelectField # BooleanField
+from wtforms import StringField, PasswordField, SelectField, ValidationError # BooleanField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 # from wtforms_sqlalchemy.orm import model_form
 
 # Import Form validators
 from wtforms.validators import Required, Length, Email, EqualTo
 
-from .model import Departamento, Provincia, Manager
+from .model import Departamento, Provincia, Ciudad, Manager
 
 # Query para los SelectField
 def provincias_dep():
     return Provincia.query.filter_by(Departamento_idDepartamento=2)
 
 # Formularios para el logeo de los managers
+
+class NonValidatingSelectField(SelectField):
+    def pre_validate(self, form):
+        pass
+
 
 class LoginForm(Form):
     email = StringField('Email', validators=[Required(message='Ingrese su email')])
@@ -60,12 +65,17 @@ class MercadoForm(Form):
     capacidad = StringField('Capacidad del mercado', [
                 Required(message='Ingrese la capacidad')])
 
-    departamento = QuerySelectField(query_factory=lambda: Departamento.query.all(), allow_blank=True, blank_text='select')
+    departamento = QuerySelectField(query_factory=lambda: Departamento.query.all(), allow_blank=True, blank_text='--seleccionar--')
 
-    #provincia = QuerySelectField(query_factory = provincias_dep)
+    provincia = NonValidatingSelectField(u'', choices=(),
+        validators=[Required(message='Seleccione una provincia')])
 
-    provincia = SelectField(u'', choices=())
+    ciudad = NonValidatingSelectField(u'', choices=())
 
+    def validate_ciudad(self, field):
+
+        if not Ciudad.query.filter_by(idCiudad=field.data).first():
+            raise ValidationError('Seleccione una ciudad')
 
 class CiudadForm(Form):
 

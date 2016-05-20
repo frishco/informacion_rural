@@ -51,8 +51,13 @@ class Mercado(db.Model):
     capacidad = db.Column(db.String, nullable=False)
     ciudad_idciudad = db.Column(db.Integer, db.ForeignKey('ciudad.idCiudad'))
 
+    def __init__(self, nombre, capacidad, ciudad_idciudad):
+        self.nombre = nombre
+        self.capacidad = capacidad
+        self.ciudad_idciudad = ciudad_idciudad
+
     def __repr__(self):
-        return  (self.nombre)
+        return  (self.nombre + " " + str(self.ciudad_idciudad))
 
 class Variedad(db.Model):
     __tablename__ = "variedad"
@@ -89,6 +94,7 @@ class Provincia(db.Model):
     idProvincia = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String, nullable=False)
     Departamento_idDepartamento = db.Column(db.Integer, db.ForeignKey('departamento.idDepartamento'))
+    ciudades = db.relationship('Ciudad', backref='provincia', lazy='dynamic')
 
     def __repr__(self):
         return (self.nombre)
@@ -101,12 +107,38 @@ class Ciudad(db.Model):
     latitud = db.Column(db.String, nullable=False)
     longitud = db.Column(db.String, nullable=False)
     Provincia_idProvincia = db.Column(db.Integer, db.ForeignKey('provincia.idProvincia'))
+    mercados = db.relationship('Mercado', backref='ciudad', lazy='dynamic')
 
     def __init__(self, nombre, latitud, longitud, Provincia_idProvincia):
         self.nombre = nombre
         self.latitud = latitud
         self.longitud = longitud
         self.Provincia_idProvincia = Provincia_idProvincia
+
+    def __repr__(self):
+        return '<Distrito %r>' % (self.nombre)
+
+class Clima(db.Model):
+    __tablename__ = "clima"
+
+    idclima = db.Column(db.Integer, primary_key=True)
+    temperatura_maxima = db.Column(db.String, nullable=False)
+    temperatura_minima = db.Column(db.String, nullable=False)
+    fecha = db.Column(db.String, nullable=False)
+    descripcion = db.Column(db.String, nullable=False)
+    lluvia = db.Column(db.String, nullable=False)
+    imagen = db.Column(db.String, nullable=False)
+    ciudad_idciudad = db.Column(db.Integer, db.ForeignKey('ciudad.idCiudad'))
+
+
+    def __init__(self, temperatura_maxima, temperatura_minima, fecha, descripcion, lluvia, imagen, ciudad_idciudad):
+        self.temperatura_maxima = temperatura_maxima
+        self.temperatura_minima = temperatura_minima
+        self.fecha = fecha
+        self.descripcion = descripcion
+        self.lluvia = lluvia
+        self.imagen = imagen
+        self.ciudad_idciudad = ciudad_idciudad
 
     def __repr__(self):
         return '<Distrito %r>' % (self.nombre)

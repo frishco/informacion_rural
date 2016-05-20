@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, flash, request, url_for, redirect
-from project import app, mysql, db, conn
+from project import app, db
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from .model import Departamento, Provincia, Ciudad, Manager, Mercado, bcrypt
 from .resources import GetDepartamentos, GetProvincias
 from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm
+
 
 @app.route('/')
 @app.route('/home')
@@ -40,7 +41,7 @@ def provincias(dep_id):
     f = 1
     for item in data:
         i = {
-            #'Id' : item.idDepartamento,
+            'IdDepartamento' : item.Departamento_idDepartamento,
             'Id' : item.idProvincia,
             'Numero' : f,
             'Nombre' : item.nombre,
@@ -58,7 +59,6 @@ def ciudades(prov_id):
     f = 1
     for item in data:
         i = {
-            #'Id' : item.idDepartamento,
             'Id' : item.idCiudad,
             'Numero' : f,
             'Nombre' : item.nombre,
@@ -73,6 +73,7 @@ def ciudades(prov_id):
 def edit_ciudad(ciudad_id):
 
     ciudad = Ciudad.query.get(ciudad_id)
+    provincia = ciudad.Provincia_idProvincia
     form = CiudadForm(obj=ciudad)
     form.Provincia_idProvincia.query = Provincia.query.filter(Provincia.idProvincia==ciudad.Provincia_idProvincia)
 
@@ -81,33 +82,46 @@ def edit_ciudad(ciudad_id):
         ciudad.Provincia_idProvincia = form.Provincia_idProvincia.data.idProvincia
         db.session.commit()
         flash("Success")
-        return redirect(url_for("departament"))
+        return redirect(url_for("ciudades", prov_id = provincia))
 
     return render_template("regions/registro.html", action="Edit", form=form)
+
+
+
+
 
 @app.route('/mercados/', methods=['GET', 'POST'])
 @login_required
 def mercados():
     data = Mercado.query.all()
-    managers = []
+    mercados = []
     for item in data:
+        ciudad = Ciudad.query.get(item.ciudad_idciudad)
         i = {
+            'IdCiudad': item.ciudad_idciudad,
             'Id' : item.idMercado,
             'Nombre' : item.nombre,
             'Capacidad' : item.capacidad,
-            'Ciudad_idCiudad': item.ciudad_idCiudad,
+            'Ciudad': ciudad.nombre,
         }
-        managers.append(i)
-    return render_template("mercados/mercados.html", managers = managers)
+        print(item)
+        mercados.append(i)
+    return render_template("mercados/mercados.html", mercados = mercados)
 
 @app.route('/mercados/registro', methods=['GET', 'POST'])
 @login_required
 def registro_mercado():
     form = MercadoForm()
     if form.validate_on_submit():
+        mercado = Mercado(
+            nombre = form.nombre.data,
+            capacidad = form.capacidad.data,
+            ciudad_idciudad = form.ciudad.data,
+        )
+        db.session.add(mercado)
+        db.session.commit()
         flash("Success")
-        return redirect(url_for("homepage"))
-
+        return redirect(url_for("mercados"))
     return render_template("mercados/registro.html", form=form)
 
 @app.route('/manager/', methods=['GET', 'POST'])
