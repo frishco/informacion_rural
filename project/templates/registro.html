@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from 'macros.html' import render_field %}
+
+{% block body %}
+
+  <div class="wrapper style4">
+    <section class="container">
+      <h1> Mercados </h1>
+      <form method="POST" class="form-control" action="" accept-charset="UTF-8" role="form">
+        {{ form.csrf_token }}
+        {% for field in form %}
+            {{ render_field(field) }}
+        {% endfor %}
+        <br>
+        <button class="button alt" type="submit" name="submit">Registro</button>
+      </form>
+    </section>
+  </div>
+<script>
+$("#departamento").change(function() {
+  var dep_id = $(this).find(":selected").val();
+  //alert(dep_id);
+  var request = $.ajax({
+        type: 'GET',
+        url: '/getProvincias/' + dep_id ,
+    });
+    request.done(function(data){
+
+        $("#provincia").empty();
+        $("#ciudad").empty();
+
+
+
+        $("#provincia").append(
+          $("<option></option>").attr(
+            "value", "").text("--seleccionar--")
+        );
+
+        $("#ciudad").append(
+          $("<option></option>").attr(
+            "value", "").text("")
+        );
+
+        $('#ciudad').prop('disabled', 'disabled');
+
+        for (var i = 0; i < data.regions.length; i++) {
+            //alert(data.regions[i].Nombre)
+            $("#provincia").append(
+                $("<option></option>").attr(
+                    "value", data.regions[i].Id).text(data.regions[i].Nombre)
+            );
+        }
+
+    });
+});
+
+$("#provincia").change(function() {
+  var prov_id = $(this).find(":selected").val();
+  var request = $.ajax({
+        type: 'GET',
+        url: '/getCiudades/' + prov_id ,
+    });
+    request.done(function(data){
+
+        $("#ciudad").empty();
+        $('#ciudad').prop('disabled', false);
+        for (var i = 0; i < data.regions.length; i++) {
+            $("#ciudad").append(
+                $("<option></option>").attr(
+                    "value", data.regions[i].Id).text(data.regions[i].Nombre)
+            );
+        }
+    });
+});
+</script>
+
+{% endblock %}

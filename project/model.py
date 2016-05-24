@@ -29,6 +29,14 @@ class Manager(db.Model):
     def get_id(self):
         return unicode(self.idManager)
 
+    def is_admin(self):
+
+        if(self.role is not "encuestador"):
+            return True
+        else:
+            return False
+
+
     def __repr__(self):
         return  (self.nombre)
 
@@ -42,6 +50,29 @@ class Producto(db.Model):
 
     def __repr__(self):
         return  (self.nombre)
+
+class Precio(db.Model):
+    __tablename__ = "precio"
+
+    idPrecio =  db.Column(db.Integer, primary_key=True)
+    precio_promedio = db.Column(db.String, nullable=False)
+    precio_max = db.Column(db.String, nullable=False)
+    precio_min = db.Column(db.String, nullable=False)
+    fecha = db.Column(db.String, nullable=False)
+    Mercado_idMercado = db.Column(db.Integer, db.ForeignKey('mercado.idMercado'))
+    variedad_idvariedad = db.Column(db.Integer, db.ForeignKey('variedad.idvariedad'))
+
+    def __init__(self, precio_promedio, precio_max, precio_min, fecha, Mercado_idMercado, variedad_idvariedad):
+        self.precio_promedio = precio_promedio
+        self.precio_max = precio_max
+        self.precio_min = precio_min
+        self.fecha = fecha
+        self.Mercado_idMercado = Mercado_idMercado
+        self.variedad_idvariedad = variedad_idvariedad
+
+    def __repr__(self):
+        return  (self.fecha)
+
 
 class Mercado(db.Model):
     __tablename__ = "mercado"
@@ -62,10 +93,15 @@ class Mercado(db.Model):
 class Variedad(db.Model):
     __tablename__ = "variedad"
 
-    idVariedad = db.Column(db.Integer, primary_key=True)
+    idvariedad = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String, nullable=False)
     caracteristicas = db.Column(db.String, nullable=False)
     Producto_idProducto = db.Column(db.Integer, db.ForeignKey('producto.idProducto'))
+
+    def __init__(self, nombre, capacidad, Producto_idProducto):
+        self.nombre = nombre
+        self.caracteristicas = caracteristicas
+        self.Producto_idProducto = Producto_idProducto
 
     def __repr__(self):
         return  (self.nombre)
@@ -127,16 +163,18 @@ class Clima(db.Model):
     fecha = db.Column(db.String, nullable=False)
     descripcion = db.Column(db.String, nullable=False)
     lluvia = db.Column(db.String, nullable=False)
+    humedad = db.Column(db.String, nullable=False)
     imagen = db.Column(db.String, nullable=False)
     ciudad_idciudad = db.Column(db.Integer, db.ForeignKey('ciudad.idCiudad'))
 
 
-    def __init__(self, temperatura_maxima, temperatura_minima, fecha, descripcion, lluvia, imagen, ciudad_idciudad):
+    def __init__(self, temperatura_maxima, temperatura_minima, fecha, descripcion, lluvia, humedad, imagen, ciudad_idciudad):
         self.temperatura_maxima = temperatura_maxima
         self.temperatura_minima = temperatura_minima
         self.fecha = fecha
         self.descripcion = descripcion
         self.lluvia = lluvia
+        self.humedad = humedad
         self.imagen = imagen
         self.ciudad_idciudad = ciudad_idciudad
 

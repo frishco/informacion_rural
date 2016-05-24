@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, flash, request, url_for, redirect
 from project import app, db
 from flask.ext.login import login_user, login_required, logout_user, current_user
-from .model import Departamento, Provincia, Ciudad, Manager, Mercado, bcrypt
+from flask.ext.user import roles_required
+from .model import Departamento, Provincia, Ciudad, Manager, Mercado, Clima,  bcrypt
 from .resources import GetDepartamentos, GetProvincias
-from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm
+from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm, ClimaForm
+from sqlalchemy import desc
 
 
 @app.route('/')
@@ -124,6 +126,38 @@ def registro_mercado():
         return redirect(url_for("mercados"))
     return render_template("mercados/registro.html", form=form)
 
+@app.route('/climas/', methods=['GET', 'POST'])
+def climas():
+    data = Clima.query.order_by(desc(Clima.fecha)).limit(100)
+    climas = []
+    for item in data:
+        ciudad = Ciudad.query.get(item.ciudad_idciudad)
+        splts = str(item.fecha).split()
+        i = {
+            'Fecha' : splts[0],
+            'Hora' : splts[1],
+            'Ciudad': ciudad.nombre,
+            'Id' : item.idclima,
+            'Temp_max' : item.temperatura_maxima,
+            'Temp_min' : item.temperatura_minima,
+            'Descripcion' : item.descripcion,
+            'Humedad' : item.humedad,
+            'Lluvia' : item.lluvia,
+            'Icono' : item.imagen,
+        }
+        climas.append(i)
+    return render_template("climas/climas.html", climas = climas)
+
+@app.route('/climas/delete/<int:clima_id>', methods=['GET', 'POST'])
+@login_required
+def delete_clima(clima_id):
+
+    clima = Clima.query.get(clima_id)
+    db.session.delete(clima)
+    db.session.commit()
+
+    return redirect(url_for("climas"))
+
 @app.route('/manager/', methods=['GET', 'POST'])
 @login_required
 def managers():
@@ -139,6 +173,22 @@ def managers():
         }
         managers.append(i)
     return render_template("manager/managers.html", managers = managers)
+
+@app.route('/productos/', methods=['GET', 'POST'])
+def mercados():
+    data = Mercado.query.all()
+    mercados = []
+    for item in data:
+        i = {
+            'Id' : item.idProducto,
+            'Nombre' : item.nombre,
+            'informacion' : item.informacion,
+            'foto': ciudad.foto,
+        }
+        print(item)
+        mercados.append(i)
+    return render_template("mercados/mercados.html", mercados = mercados)
+
 
 @app.route('/manager/profile', methods=['GET', 'POST'])
 @login_required
@@ -163,6 +213,9 @@ def registro_form():
         return redirect(url_for("managers"))
 
     return render_template("manager/registro.html", form=form)
+
+# Logeo de admin y encuestadores
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

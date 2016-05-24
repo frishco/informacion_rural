@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Clima por hora</h3>
+
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th></th>
+											<th>Fecha</th>
+											<th>Hora</th>
+											<th>Ciudad</th>
+											<th>Temperatura Máxima (°C)</th>
+											<th>Temperatura Mínima (°C)</th>
+											<th>Descripcion</th>
+											<th>Humedad (%)</th>
+											<th>Lluvia (mm por 3h)</th>
+											{% if current_user.is_authenticated %}
+											<th></th>
+											{% endif %}
+										</tr>
+									</thead>
+									<tbody>
+
+                    {% for clima in climas %}
+                    <tr>
+
+											<td><img src="http://openweathermap.org/img/w/{{ clima.Icono }}.png" ></td>
+											<td>{{ clima.Fecha }}</td>
+											<td>{{ clima.Hora }}</td>
+											<td>{{ clima.Ciudad }}</td>
+											<td>{{ clima.Temp_max }}</td>
+											<td>{{ clima.Temp_min }}</td>
+											<td>{{ clima.Descripcion }}</td>
+											<td>{{ clima.Humedad }}</td>
+											<td>{{ clima.Lluvia }}</td>
+											{% if current_user.is_authenticated %}
+											<th>
+												<ul class="tabla">
+													<li><a href="" class="fa fa-pencil"></a></li>
+													<li><a href="{{ url_for('delete_clima', clima_id = clima.Id ) }}" class="fa fa-minus-circle"></a></li>
+												</ul>
+											</th>
+											{% endif %}
+
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}
