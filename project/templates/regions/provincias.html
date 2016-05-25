@@ -22,7 +22,7 @@
                     <tr>
 											<td>{{ region.Numero }}</td>
 											<td>{{ region.Nombre }}</td>
-											<td><a href="/ciudades/{{ region.Id}}"> Ver detalle </a></td>
+											<td><a href="{{ url_for('ciudades', prov_id = region.Id) }}"> Ver detalle </a></td>
                     </tr>
                     {% endfor %}
 

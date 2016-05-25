@@ -41,7 +41,7 @@
 								<ul>
 									<li class="active"><a href="/">Home</a></li>
 									<li>
-										<a href="">Granos Andinos</a>
+										<a href="{{ url_for('productos') }}">Granos Andinos</a>
 										<ul>
 											<li><a href="#">Quinua</a>
 												<ul>
@@ -70,18 +70,18 @@
 
 										</ul>
 									</li>
-									<li><a href="/dep">Departamentos</a></li>
+									<li><a href="{{ url_for('departament') }}">Departamentos</a></li>
 									<li><a href="/prov2">Noticias</a></li>
 
 									<li><a href="{{ url_for('climas') }}">Clima</a></li>
-									
+
 
 									{% if current_user.role == "admin" %}
 									<li><a href="{{ url_for('managers') }}">Encuestadores</a></li>
 									{% endif %}
 									{% if current_user.is_authenticated %}
 									<li><a href="{{ url_for('mercados') }}">Mercados</a></li>
-									<li><a href="">Precio</a></li>
+									<li><a href="{{ url_for('precios') }}">Precio</a></li>
 									<li><a href="{{ url_for('profile') }}">{{ current_user.nombre }} {{ current_user.apellido }}</a>
 										<ul>
 											<li><a href="{{ url_for('profile') }}">Datos</a></li>

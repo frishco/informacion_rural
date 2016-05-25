@@ -46,7 +46,7 @@ class Producto(db.Model):
     idProducto = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String, nullable=False)
     informacion = db.Column(db.String, nullable=False)
-    foto = db.Column(db.String, nullable=False)
+    imagen = db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return  (self.nombre)
@@ -88,7 +88,7 @@ class Mercado(db.Model):
         self.ciudad_idciudad = ciudad_idciudad
 
     def __repr__(self):
-        return  (self.nombre + " " + str(self.ciudad_idciudad))
+        return  (self.nombre)
 
 class Variedad(db.Model):
     __tablename__ = "variedad"
@@ -98,7 +98,7 @@ class Variedad(db.Model):
     caracteristicas = db.Column(db.String, nullable=False)
     Producto_idProducto = db.Column(db.Integer, db.ForeignKey('producto.idProducto'))
 
-    def __init__(self, nombre, capacidad, Producto_idProducto):
+    def __init__(self, nombre, caracteristicas, Producto_idProducto):
         self.nombre = nombre
         self.caracteristicas = caracteristicas
         self.Producto_idProducto = Producto_idProducto

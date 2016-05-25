@@ -8,6 +8,10 @@
 */
 
 /* Cuadro */
+
+.left{
+  text-align: left !important;
+}
 ul.add {
   cursor: default;
   padding-bottom: 1.5em;
@@ -671,6 +675,19 @@ ul.add {
 				font-weight: 400;
 			}
 
+      .wrapper.style2 .image {
+				display: block;
+        max-width: 600px !important;
+				margin: 2em auto 2em auto;
+			}
+
+				.wrapper.style2 .image img {
+          max-width: 600px !important;
+					border-radius: 50%;
+					border: 10px solid;
+					border-color: black;
+				}
+
 		.wrapper.style3 {
 			padding-bottom: 6em;
 			background: #82b440;
@@ -697,6 +714,16 @@ ul.add {
 			color: white;
 		}
 
+    .wrapper.style5 h3 {
+      display: block;
+      margin-bottom: 1em;
+      letter-spacing: 1px;
+      line-height: 1.4em;
+      text-transform: uppercase;
+      font-size: 1.6em;
+      font-weight: 400;
+    }
+
 			.wrapper.style5 .image {
 				display: block;
 				width: 60%;
@@ -709,6 +736,34 @@ ul.add {
 					border-color: white;
 				}
 
+        .wrapper.style6 {
+    			background: #82b440;
+    			text-align: right;
+    			color: white;
+    		}
+
+        .wrapper.style6 h3 {
+          display: block;
+          margin-bottom: 1em;
+          letter-spacing: 1px;
+          line-height: 1.4em;
+          text-transform: uppercase;
+          font-size: 1.6em;
+          font-weight: 400;
+        }
+
+    			.wrapper.style6 .image {
+    				display: block;
+            max-width: 600px !important;
+    				margin: 2em auto 2em auto;
+    			}
+
+    				.wrapper.style6 .image img {
+              max-width: 600px !important;
+    					border-radius: 50%;
+    					border: 10px solid;
+    					border-color: white;
+    				}
 /* Header */
 
 	#header {

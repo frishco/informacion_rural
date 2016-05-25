@@ -20,7 +20,7 @@
 
                     {% for region in regions %}
                     <tr>
-											<td><a href="/prov/{{ region.Id}}">{{ region.Departamento }}</a></td>
+											<td><a href="{{ url_for('provincias', dep_id = region.Id) }}">{{ region.Departamento }}</a></td>
 											<td>{{ region.Descripcion }}</td>
 											<td>{{ region.Superficie}}</td>
                     </tr>

@@ -1,6 +1,6 @@
 from flask_restful import Resource, Api
 from project import mysql, api, conn
-from .model import Departamento, Provincia, Ciudad
+from .model import Departamento, Provincia, Ciudad, Producto, Variedad
 
 class GetDepartamentos(Resource):
     def get(self):
@@ -59,6 +59,24 @@ class GetCiudades(Resource):
         except Exception as e:
             return {'error': str(e)}
 
+class GetVariedades(Resource):
+    def get(self, producto_id):
+        try:
+            data = Variedad.query.filter_by(Producto_idProducto=producto_id)
+            variedades = []
+            for item in data:
+                i = {
+                    'Id' : item.idvariedad,
+                    'Nombre' : item.nombre,
+                    'Caracteristicas' : item.caracteristicas,
+                }
+                variedades.append(i)
+
+            return {'StatusCode':'200','variedades':variedades}
+        except Exception as e:
+            return {'error': str(e)}
+
 api.add_resource(GetDepartamentos, '/getDepartamentos', methods=['GET',])
 api.add_resource(GetProvincias, '/getProvincias/<int:dep_id>', methods=['GET',])
 api.add_resource(GetCiudades, '/getCiudades/<int:prov_id>', methods=['GET',])
+api.add_resource(GetVariedades, '/getVariedades/<int:producto_id>', methods=['GET',])

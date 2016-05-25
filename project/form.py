@@ -5,14 +5,14 @@
 from flask.ext.wtf import Form # , RecaptchaField
 
 # Import Form elements such as StringField and BooleanField (optional)
-from wtforms import StringField, PasswordField, SelectField, DateTimeField, ValidationError # BooleanField
+from wtforms import StringField, PasswordField, SelectField, DateTimeField, ValidationError, DateField # BooleanField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 # from wtforms_sqlalchemy.orm import model_form
 
 # Import Form validators
 from wtforms.validators import Required, Length, Email, EqualTo
 
-from .model import Departamento, Provincia, Ciudad, Manager, Clima
+from .model import Departamento, Provincia, Ciudad, Manager, Clima, Producto, Variedad, Mercado
 
 # Query para los SelectField
 def provincias_dep():
@@ -91,35 +91,39 @@ class CiudadForm(Form):
     Provincia_idProvincia = QuerySelectField(get_label='nombre')
 
 
-class ClimaForm(Form):
+class VariedadForm(Form):
+
+    nombre = StringField('Ingrese la variedad del producto', [
+                Required(message='Debe ingresar la variedad')])
+
+    caracteristicas = StringField('Ingrese las caracteristicas', [
+                Required(message='Debe ingresar las caracteristicas')])
+
+    producto = QuerySelectField(query_factory=lambda: Producto.query.all())
 
 
-    temperatura_maxima = StringField('Ingrese la temperatura maxima', [
-                Required(message='ingrese dato')])
+class PrecioForm(Form):
 
-    temperatura_minima = StringField('Ingrese la temperatura minima', [
-                Required(message='ingrese dato')])
 
-    fecha = DateTimeField('Fecha pues', [
-                Required(message='ingrese dato')])
+    precio_promedio = StringField('Ingrese el valor del precio promedio', [
+                Required(message='ingrese el precio promedio')])
 
-    descripcion = StringField('Ingrese la descripcion', [
-                Required(message='ingrese dato')])
+    precio_max = StringField('Ingrese el valor del precio maximo', [
+                Required(message='ingrese el precio maximo')])
 
-    lluvia = StringField('Ingrese la lluvia', [
-                Required(message='ingrese dato')])
+    precio_min = StringField('Ingrese el valor del precio minimo', [
+                Required(message='ingrese el precio minimo')])
 
-    imagen = StringField('Ingrese la imagen', [
-                Required(message='ingrese dato')])
+    fecha = DateField('Fecha pues', [
+                Required(message='ingrese la fecha que corresponda')])
 
-    departamento = QuerySelectField(query_factory=lambda: Departamento.query.all(), allow_blank=True, blank_text='--seleccionar--')
+    producto = QuerySelectField(query_factory=lambda: Producto.query.all())
 
-    provincia = NonValidatingSelectField(u'', choices=(),
-        validators=[Required(message='Seleccione una provincia')])
+    variedad = NonValidatingSelectField(u'', choices=())
 
-    ciudad = NonValidatingSelectField(u'', choices=())
+    mercado = QuerySelectField(query_factory=lambda: Mercado.query.all())
 
-    def validate_ciudad(self, field):
+    def validate_variedad(self, field):
 
-        if not Ciudad.query.filter_by(idCiudad=field.data).first():
-            raise ValidationError('Seleccione una ciudad')
+        if not Variedad.query.filter_by(idvariedad=field.data).first():
+            raise ValidationError('Seleccione una variedad')

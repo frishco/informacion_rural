@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, flash, request, url_for, redirect
 from project import app, db
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from flask.ext.user import roles_required
-from .model import Departamento, Provincia, Ciudad, Manager, Mercado, Clima,  bcrypt
+from .model import Departamento, Provincia, Ciudad, Manager, Mercado, Clima, Producto, Variedad, Precio,  bcrypt
 from .resources import GetDepartamentos, GetProvincias
-from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm, ClimaForm
+from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm, PrecioForm, VariedadForm
 from sqlalchemy import desc
 
 
@@ -30,7 +32,7 @@ def departament():
         }
         regions.append(i)
 
-    return render_template("departament.html", regions = regions)
+    return render_template("regions/departament.html", regions = regions)
 
 @app.route('/prov/<int:dep_id>')
 def provincias(dep_id):
@@ -50,7 +52,7 @@ def provincias(dep_id):
         }
         regions.append(i)
         f = f + 1
-    return render_template("provincias.html", regions = regions, departamento = departamento)
+    return render_template("regions/provincias.html", regions = regions, departamento = departamento)
 
 @app.route('/ciudades/<int:prov_id>')
 def ciudades(prov_id):
@@ -69,7 +71,7 @@ def ciudades(prov_id):
         }
         regions.append(i)
         f = f + 1
-    return render_template("ciudades.html", regions = regions, provincia = provincia)
+    return render_template("regions/ciudades.html", regions = regions, provincia = provincia)
 
 @app.route('/ciudad/<int:ciudad_id>', methods=['GET', 'POST'])
 def edit_ciudad(ciudad_id):
@@ -88,10 +90,6 @@ def edit_ciudad(ciudad_id):
 
     return render_template("regions/registro.html", action="Edit", form=form)
 
-
-
-
-
 @app.route('/mercados/', methods=['GET', 'POST'])
 @login_required
 def mercados():
@@ -106,7 +104,6 @@ def mercados():
             'Capacidad' : item.capacidad,
             'Ciudad': ciudad.nombre,
         }
-        print(item)
         mercados.append(i)
     return render_template("mercados/mercados.html", mercados = mercados)
 
@@ -125,6 +122,64 @@ def registro_mercado():
         flash("Success")
         return redirect(url_for("mercados"))
     return render_template("mercados/registro.html", form=form)
+
+@app.route('/precios/', methods=['GET', 'POST'])
+def precios():
+    data = Precio.query.order_by(desc(Precio.fecha))
+    precios = []
+    for item in data:
+        mercado = Mercado.query.get(item.Mercado_idMercado)
+        ciudad = Ciudad.query.get(mercado.ciudad_idciudad)
+        variedad = Variedad.query.get(item.variedad_idvariedad)
+        producto = Producto.query.get(variedad.Producto_idProducto)
+        i = {
+            'Fecha' : item.fecha,
+            'Ciudad': ciudad.nombre,
+            'Mercado': mercado.nombre,
+            'Id' : item.idPrecio,
+            'precio_max' : item.precio_max,
+            'precio_min' : item.precio_min,
+            'precio_promedio' : item.precio_promedio,
+            'Variedad' : variedad.nombre,
+            'Producto' : producto.nombre,
+        }
+        precios.append(i)
+    return render_template("precios/precios.html", precios = precios)
+
+
+@app.route('/precios/registro', methods=['GET', 'POST'])
+@login_required
+def registro_precio():
+    form = PrecioForm()
+    if form.validate_on_submit():
+        precio = Precio(
+            precio_promedio = form.precio_promedio.data,
+            precio_max = form.precio_max.data,
+            precio_min = form.precio_min.data,
+            fecha = form.fecha.data,
+            variedad_idvariedad = form.variedad.data,
+            Mercado_idMercado = form.mercado.data.idMercado,
+        )
+        db.session.add(precio)
+        db.session.commit()
+        flash("Success")
+        return redirect(url_for("precios"))
+    return render_template("precios/registro.html", form=form)
+
+@app.route('/precios/editar/<int:precio_id>', methods=['GET', 'POST'])
+@login_required
+def editar_precio(precio_id):
+    precio = Precio.query.get(precio_id)
+    form = PrecioForm(obj=precio)
+    if form.validate_on_submit():
+        form.populate_obj(precio)
+        precio.variedad_idvariedad = form.variedad.data
+        precio.Mercado_idMercado = form.mercado.data.idMercado
+        db.session.commit()
+        flash("Success")
+        return redirect(url_for("precios"))
+    return render_template("precios/registro.html", form=form)
+
 
 @app.route('/climas/', methods=['GET', 'POST'])
 def climas():
@@ -174,21 +229,65 @@ def managers():
         managers.append(i)
     return render_template("manager/managers.html", managers = managers)
 
-@app.route('/productos/', methods=['GET', 'POST'])
-def mercados():
-    data = Mercado.query.all()
-    mercados = []
+@app.route('/productos/', methods=['GET'])
+def productos():
+    data = Producto.query.all()
+    productos = []
     for item in data:
+        variedades = []
+        data_variedades = Variedad.query.filter_by(Producto_idProducto=item.idProducto)
+        for item_v in data_variedades:
+
+
+            i_v = {
+                'Id' : item_v.idvariedad,
+                'Nombre' : item_v.nombre,
+                'Caracteristicas' : item_v.caracteristicas,
+            }
+            variedades.append(i_v)
+
         i = {
             'Id' : item.idProducto,
             'Nombre' : item.nombre,
-            'informacion' : item.informacion,
-            'foto': ciudad.foto,
+            'Informacion' : item.informacion,
+            'Imagen': item.imagen,
+            "Variedades": variedades,
         }
-        print(item)
-        mercados.append(i)
-    return render_template("mercados/mercados.html", mercados = mercados)
+        productos.append(i)
+    return render_template("productos/productos.html", productos = productos)
 
+@app.route('/productos/<int:producto_id>', methods=['GET'])
+def producto(producto_id):
+    data = Variedad.query.filter_by(Producto_idProducto=producto_id)
+    producto = Producto.query.get(producto_id)
+    productos = []
+    for item in data:
+
+
+        i = {
+            'Id' : item.idvariedad,
+            'Nombre' : item.nombre,
+            'Caracteristicas' : item.caracteristicas,
+            'Imagen': item.Producto_idProducto,
+        }
+        productos.append(i)
+    return render_template("productos/productos.html", productos = productos)
+
+@app.route('/productos/registro', methods=['GET', 'POST'])
+def registro_producto():
+    form = VariedadForm()
+    if form.validate_on_submit():
+
+        variedad = Variedad(
+            nombre = form.nombre.data,
+            caracteristicas = form.caracteristicas.data,
+            Producto_idProducto = form.producto.data.idProducto,
+        )
+        db.session.add(variedad)
+        db.session.commit()
+        flash("Success")
+        return redirect(url_for("productos"))
+    return render_template("productos/registro.html", form=form)
 
 @app.route('/manager/profile', methods=['GET', 'POST'])
 @login_required

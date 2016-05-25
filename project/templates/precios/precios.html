@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Precio por productos</h3>
+					{% if current_user.is_authenticated %}
+					<div class="add">
+						<ul class="add">
+							<li><a href="{{ url_for('registro_precio') }}" class="fa fa-plus-circle" ><span>Agregar precio</span></a></li></ul>
+					</div>
+					{% endif %}
+
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>Fecha</th>
+											<th>Producto</th>
+											<th>Variedad</th>
+											<th>Ciudad</th>
+											<th>Mercado</th>
+											<th>Precio Promedio  (s/)</th>
+											<th>Precio Maximo  (s/)</th>
+											<th>Precio Minimo  (s/)</th>
+
+											{% if current_user.is_authenticated %}
+											<th></th>
+											{% endif %}
+										</tr>
+									</thead>
+									<tbody>
+
+                    {% for precio in precios %}
+                    <tr>
+
+											<td>{{ precio.Fecha }}</td>
+											<td>{{ precio.Producto }}</td>
+											<td>{{ precio.Variedad }}</td>
+											<td>{{ precio.Ciudad }}</td>
+											<td>{{ precio.Mercado }}</td>
+											<td>{{ precio.precio_promedio }}</td>
+											<td>{{ precio.precio_max }}</td>
+											<td>{{ precio.precio_min }}</td>
+											{% if current_user.is_authenticated %}
+											<th>
+												<ul class="tabla">
+													<li><a href="{{ url_for('editar_precio', precio_id = precio.Id) }}" class="fa fa-pencil"></a></li>
+													<li><a href="" class="fa fa-minus-circle"></a></li>
+												</ul>
+											</th>
+											{% endif %}
+
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}

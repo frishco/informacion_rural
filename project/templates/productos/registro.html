@@ -5,18 +5,16 @@
 
   <div class="wrapper style4">
     <section class="container">
-      <h1> Mercados </h1>
-      <form method="POST" class="form-control" action="/mercados/registro" accept-charset="UTF-8" role="form">
+      <h1> Variedad </h1>
+      <form action="{{ form_action }}" method="{{ method | d("POST") }}" class="form-control">
         {{ form.csrf_token }}
         {% for field in form %}
             {{ render_field(field) }}
         {% endfor %}
         <br>
-        <button class="button alt" type="submit" name="submit">Registro</button>
+        <button class="button alt" type="submit" name="submit">Guardar</button>
       </form>
     </section>
   </div>
-	<script type="text/javascript" src="{{ url_for('static', filename='assets/departamento.js') }}"></script>
-
 
 {% endblock %}

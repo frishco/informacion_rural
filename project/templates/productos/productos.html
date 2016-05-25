@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% for producto in productos %}
+		{% if producto.Id%2 %}
+		<div class="wrapper style2">
+		{% else %}
+		<div class="wrapper style6">
+		{% endif %}
+						<section class="container">
+								<h3>{{ producto.Nombre }}</h3>
+								<div class="add">
+									<ul class="add">
+										<li><a href="{{ url_for('registro_producto') }}" class="fa fa-plus-circle" ><span>Agregar producto</span></a></li></ul>
+								</div>
+								<div class="image">
+								<img src="{{ url_for('static', filename='images/')}}{{producto.Imagen}}" >
+							</div>
+								<p> {{ producto.Informacion }}
+
+									<div class="table-wrapper">
+										<table>
+											<thead>
+												<tr>
+													<th>Variedad</th>
+													<th>Caracteristicas</th>
+												</tr>
+											</thead>
+											<tbody class="left">
+
+
+		                    {% for variedad in producto.Variedades %}
+		                    <tr>
+													<td>{{ variedad.Nombre }}</td>
+													<td>{{ variedad.Caracteristicas }}</td>
+
+		                    </tr>
+		                    {% endfor %}
+
+											</tbody>
+										</table>
+									</div>
+
+		      </section>
+		</div>
+{% endfor %}
+
+{% endblock %}

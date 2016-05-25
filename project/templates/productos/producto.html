@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="wrapper style2">
+				<section class="container">
+          <h3>Variedad</h3>
+					<div class="add">
+						<ul class="add">
+							<li><a href="{{ url_for('registro_producto') }}" class="fa fa-plus-circle" ><span>Agregar producto</span></a></li></ul>
+					</div>
+							<div class="table-wrapper">
+								<table>
+									<thead>
+										<tr>
+											<th>Nombre</th>
+											<th>Caracteristicas</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+                    {% for producto in productos %}
+                    <tr>
+											<td><a href="#">{{ producto.Nombre }}</a></td>
+											<td>{{ producto.Caracteristicas }}</td>
+
+                    </tr>
+                    {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+      </section>
+</div>
+
+
+{% endblock %}
