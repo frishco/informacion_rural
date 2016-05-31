@@ -97,7 +97,7 @@ def update_clima(ciudad_id):
             climas = data['list']
             for item in climas:
                 if not Clima.query.filter_by(fecha=item['dt_txt']).filter_by(ciudad_idciudad=ciudad_id).first():
-                    if not item['rain'] :
+                    if not 'rain' in item:
                         rain = "0"
                     else:
                         rain = item['rain']["3h"]
