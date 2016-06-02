@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+
+		<div class="wrapper style2">
+
+			<section class="container">
+
+					<h3>Noticias</h3>
+
+
+					{% if current_user.is_authenticated %}
+					<div class="add">
+						<ul class="add">
+							<li><a href="{{ url_for('registro_noticia') }}" class="fa fa-plus-circle" ><span>Agregar noticia</span></a></li></ul>
+					</div>
+
+					{% endif %}
+					{% for noticia in noticias %}
+						<div class="noticia">
+							<div class="row">
+								<h2> {{noticia.Titulo}}</h2>
+							</div>
+							<div class="row">
+								<div class="3u">
+									<img class="noticia-list" src="{{ url_for('static', filename='images/noticias/')}}{{noticia.Imagen}}" >
+								</div>
+								<div class="9u">
+									<span> {{noticia.Fecha }}</span>
+									<p>{{noticia.Cuerpo}}</p>
+									<a target="_blank" href="{{ noticia.Fuente }}"> Ver más </a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+
+    	</section>
+		</div>
+
+
+{% endblock %}

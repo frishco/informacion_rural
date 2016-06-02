@@ -89,11 +89,16 @@ class GetCiudad(Resource):
     def get(self, ciudad_id):
         try:
             ciudad = Ciudad.query.get(ciudad_id)
+            provincia = Provincia.query.get(ciudad.Provincia_idProvincia)
+            departamento = Departamento.query.get(provincia.Departamento_idDepartamento)
+
             i = {
                 'Id' : ciudad.idCiudad,
                 'Nombre' : ciudad.nombre,
                 'Latitud' : ciudad.latitud,
-                'Longitud' : ciudad.longitud
+                'Longitud' : ciudad.longitud,
+                'Provincia' : provincia.nombre,
+                'Departamento' : departamento.nombre
             }
 
             return {'StatusCode':'200','ciudad':i}

@@ -95,7 +95,12 @@ ul.add {
 		width: 220px;
   }
 
-
+.noticia-list{
+  max-width: 300px;
+}
+.noticia{
+  margin-bottom: 30px;
+}
 
 /*Custom */
 

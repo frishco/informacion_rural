@@ -4,10 +4,12 @@ from flask import Blueprint, render_template, flash, request, url_for, redirect
 from project import app, db
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from flask.ext.user import roles_required
-from .model import Departamento, Provincia, Ciudad, Manager, Mercado, Clima, Producto, Variedad, Precio,  bcrypt
+from .model import Departamento, Provincia, Ciudad, Manager, Mercado, Clima, Producto, Variedad, Precio, Noticia, bcrypt
 from .resources import GetDepartamentos, GetProvincias
-from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm, PrecioForm, VariedadForm
+from .form import MercadoForm, CiudadForm, RegisterForm, LoginForm, PrecioForm, VariedadForm, NoticiaForm
 from sqlalchemy import desc
+from datetime import datetime
+from .parser import fecha_parser
 
 
 @app.route('/')
@@ -189,7 +191,7 @@ def climas():
         ciudad = Ciudad.query.get(item.ciudad_idciudad)
         splts = str(item.fecha).split()
         i = {
-            'Fecha' : splts[0],
+            'Fecha' : fecha_parser(splts[0]),
             'Hora' : splts[1],
             'Ciudad': ciudad.nombre,
             'Id' : item.idclima,
@@ -288,6 +290,44 @@ def registro_producto():
         flash("Success")
         return redirect(url_for("productos"))
     return render_template("productos/registro.html", form=form)
+
+@app.route('/noticias/', methods=['GET', 'POST'])
+def noticias():
+    data = Noticia.query.all()
+    noticias = []
+    for item in data:
+        fecha = fecha_parser(item.fecha)
+
+        i = {
+            'Id' : item.idNoticia,
+            'Titulo' : item.titulo,
+            'Cuerpo' : item.cuerpo,
+            'Fecha' : fecha,
+            'Fuente' : item.fuente,
+            'Imagen' : item.imagen,
+        }
+        noticias.append(i)
+    return render_template("noticias/noticias.html", noticias = noticias)
+
+
+@app.route('/noticias/registro', methods=['GET', 'POST'])
+@login_required
+def registro_noticia():
+    form = NoticiaForm()
+    if form.validate_on_submit():
+
+        noticia = Noticia(
+            titulo = form.titulo.data,
+            cuerpo = form.cuerpo.data,
+            fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            fuente = form.fuente.data,
+            imagen = form.imagen.data,
+        )
+        db.session.add(noticia)
+        db.session.commit()
+        flash("Success")
+        return redirect(url_for("productos"))
+    return render_template("noticias/registro.html", form=form)
 
 @app.route('/manager/profile', methods=['GET', 'POST'])
 @login_required

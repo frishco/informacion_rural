@@ -5,7 +5,7 @@
 from flask.ext.wtf import Form # , RecaptchaField
 
 # Import Form elements such as StringField and BooleanField (optional)
-from wtforms import StringField, PasswordField, SelectField, DateTimeField, ValidationError, DateField # BooleanField
+from wtforms import StringField, PasswordField, SelectField, DateTimeField, ValidationError, DateField, TextAreaField # BooleanField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 # from wtforms_sqlalchemy.orm import model_form
 
@@ -76,6 +76,21 @@ class MercadoForm(Form):
 
         if not Ciudad.query.filter_by(idCiudad=field.data).first():
             raise ValidationError('Seleccione una ciudad')
+
+class NoticiaForm(Form):
+
+    titulo = StringField('Titulo', [
+                Required(message='Ingrese el Titulo')])
+
+    cuerpo = TextAreaField('El texto de la noticia', [
+                Required(message='Ingrese la noticia')])
+
+    fuente = StringField('Ingrese la fuente', [
+                Required(message='Ingrese la fuente')])
+
+    imagen = StringField('Ingrese la imagen', [
+                Required(message='Ingrese la imagen')])
+
 
 class CiudadForm(Form):
 

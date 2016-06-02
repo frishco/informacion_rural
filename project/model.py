@@ -90,6 +90,27 @@ class Mercado(db.Model):
     def __repr__(self):
         return  (self.nombre)
 
+class Noticia(db.Model):
+    __tablename__ = "noticia"
+
+    idNoticia = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String, nullable=False)
+    cuerpo = db.Column(db.String, nullable=False)
+    fecha = db.Column(db.String, nullable=False)
+    fuente = db.Column(db.String, nullable=False)
+    imagen = db.Column(db.String, nullable=False)
+
+    def __init__(self, titulo, cuerpo, fecha, fuente, imagen):
+        self.titulo = titulo
+        self.cuerpo = cuerpo
+        self.fecha = fecha
+        self.fuente = fuente
+        self.imagen = imagen
+
+    def __repr__(self):
+        return  (self.titulo)
+
+
 class Variedad(db.Model):
     __tablename__ = "variedad"
 
