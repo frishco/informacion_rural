@@ -1,7 +1,9 @@
 from flask_restful import Resource, Api
 from project import mysql, api, conn
-from .model import Departamento, Provincia, Ciudad, Producto, Variedad, Clima
+from .model import Departamento, Provincia, Ciudad, Producto, Variedad, Clima, Noticia
 from sqlalchemy import desc
+from .parser import fecha_parser
+from datetime import datetime, timedelta
 
 class GetDepartamentos(Resource):
     def get(self):
@@ -65,7 +67,6 @@ class GetClimaCiudad(Resource):
         try:
             data = Clima.query.filter_by(ciudad_idciudad=ciudad_id).order_by(desc(Clima.fecha)).limit(8)
             climas = []
-            f = 1
             for item in data:
                 splts = str(item.fecha).split()
                 i = {
@@ -82,6 +83,105 @@ class GetClimaCiudad(Resource):
                 climas.append(i)
 
             return {'StatusCode':'200','climas':climas}
+        except Exception as e:
+            return {'error': str(e)}
+
+class GetClimaCiudadActual(Resource):
+    def get(self, ciudad_id):
+        try:
+            info = []
+            data = Clima.query.filter_by(ciudad_idciudad=ciudad_id).order_by(desc(Clima.fecha)).limit(20)
+            temp = []
+            humedad = []
+            climas = []
+            icono = []
+            descripcion = []
+            dia = (datetime.now()).strftime("%Y-%m-%d")
+
+
+            for item in data:
+
+                splts = str(item.fecha).split()
+                if(splts[0] == dia):
+                    humedad.append(int(item.humedad))
+                    temp.append(float(item.temperatura_maxima))
+                    temp.append(float(item.temperatura_minima))
+                    icono.append(item.imagen)
+                    descripcion.append(item.descripcion)
+                    i = {
+                        'Hora' : splts[1],
+                        'Id' : item.idclima,
+                        'Temp_max' : item.temperatura_maxima,
+                        'Temp_min' : item.temperatura_minima,
+                        'Descripcion' : item.descripcion,
+                        'Humedad' : item.humedad,
+                        'Lluvia' : item.lluvia,
+                        'Icono' : item.imagen,
+                    }
+                    climas.append(i)
+
+            clima = {
+                'fecha': dia,
+                'climas' : climas,
+                'temp_max': max(temp),
+                'temp_min': min(temp),
+                'humedad': str(max(humedad)) + "-" + str(min(humedad)),
+                'icono': max(set(icono), key=icono.count),
+                'descripcion': max(set(descripcion), key=descripcion.count),
+            }
+            info.append(clima)
+            return {'StatusCode':'200','data':info}
+        except Exception as e:
+            return {'error': str(e)}
+
+class GetClimaCiudadSemana(Resource):
+    def get(self, ciudad_id):
+        try:
+            data = Clima.query.filter_by(ciudad_idciudad=ciudad_id).order_by(desc(Clima.fecha))
+            info = []
+            for n in range(0,3):
+                temp = []
+                humedad = []
+                climas = []
+                icono = []
+                descripcion = []
+                dia = (datetime.now() - timedelta(n)).strftime("%Y-%m-%d")
+
+
+                for item in data:
+
+
+                    splts = str(item.fecha).split()
+                    if(splts[0] == dia):
+                        humedad.append(int(item.humedad))
+                        temp.append(float(item.temperatura_maxima))
+                        temp.append(float(item.temperatura_minima))
+                        icono.append(item.imagen)
+                        descripcion.append(item.descripcion)
+                        i = {
+                            'Hora' : splts[1],
+                            'Id' : item.idclima,
+                            'Temp_max' : item.temperatura_maxima,
+                            'Temp_min' : item.temperatura_minima,
+                            'Descripcion' : item.descripcion,
+                            'Humedad' : item.humedad,
+                            'Lluvia' : item.lluvia,
+                            'Icono' : item.imagen,
+                        }
+                        climas.append(i)
+
+                clima = {
+                    'fecha': dia,
+                    'climas' : climas,
+                    'temp_max': max(temp),
+                    'temp_min': min(temp),
+                    'humedad': str(max(humedad)) + "-" + str(min(humedad)),
+                    'icono': max(set(icono), key=icono.count),
+                    'descripcion': max(set(descripcion), key=descripcion.count),
+                }
+                info.append(clima)
+
+            return {'StatusCode':'200','data':info}
         except Exception as e:
             return {'error': str(e)}
 
@@ -154,10 +254,35 @@ class GetVariedades(Resource):
         except Exception as e:
             return {'error': str(e)}
 
+class GetNoticias(Resource):
+    def get(self):
+        try:
+            data = Noticia.query.order_by(desc(Noticia.fecha)).limit(10)
+            noticias = []
+            for item in data:
+                fecha = fecha_parser(item.fecha)
+
+                i = {
+                    'Id' : item.idNoticia,
+                    'Titulo' : item.titulo,
+                    'Cuerpo' : item.cuerpo,
+                    'Fecha' : fecha,
+                    'Fuente' : item.fuente,
+                    'Imagen' : item.imagen,
+                }
+                noticias.append(i)
+
+            return {'StatusCode':'200','noticias':noticias}
+        except Exception as e:
+            return {'error': str(e)}
+GetClimaCiudadSemana
 api.add_resource(GetDepartamentos, '/getDepartamentos', methods=['GET',])
 api.add_resource(GetProductos, '/getProductos', methods=['GET',])
+api.add_resource(GetNoticias, '/getNoticias', methods=['GET',])
 api.add_resource(GetProvincias, '/getProvincias/<int:dep_id>', methods=['GET',])
 api.add_resource(GetCiudades, '/getCiudades/<int:prov_id>', methods=['GET',])
 api.add_resource(GetCiudad, '/getCiudad/<int:ciudad_id>', methods=['GET',])
 api.add_resource(GetClimaCiudad, '/getClima/<int:ciudad_id>', methods=['GET',])
+api.add_resource(GetClimaCiudadActual, '/getClimaActual/<int:ciudad_id>', methods=['GET',])
+api.add_resource(GetClimaCiudadSemana, '/getClimaSemana/<int:ciudad_id>', methods=['GET',])
 api.add_resource(GetVariedades, '/getVariedades/<int:producto_id>', methods=['GET',])

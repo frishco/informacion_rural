@@ -2,7 +2,7 @@ from project import app, db
 from .model import Departamento, Provincia, Ciudad, Clima
 from flask import  render_template, flash, request, url_for, redirect
 from flask.ext.login import login_required
-
+from datetime import datetime, timedelta
 import requests
 import simplejson
 import json
@@ -161,7 +161,8 @@ def update_clima_prov(prov_id):
 
                 climas = data['list']
                 for item in climas:
-                    if not Clima.query.filter_by(fecha=item['dt_txt']).filter_by(ciudad_idciudad=ciudad.idCiudad).first():
+                    date_dt = datetime.strptime(item['dt_txt'],'%Y-%m-%d %H:%M:%S') + timedelta(hours = -5)
+                    if not Clima.query.filter_by(fecha=str(date_dt)).filter_by(ciudad_idciudad=ciudad.idCiudad).first():
                         if not 'rain' in item:
                             print ('wiji')
                             rain = "0"
@@ -171,10 +172,14 @@ def update_clima_prov(prov_id):
                             else:
                                 rain = item['rain']["3h"]
 
+                        date_dt = datetime.strptime(item['dt_txt'],'%Y-%m-%d %H:%M:%S') + timedelta(hours = -5)
+                        date_str = str(date_dt)
+                        #print(date_str)
+
                         clima = Clima(
                             temperatura_maxima = item['main']['temp_max'],
                             temperatura_minima = item['main']['temp_min'],
-                            fecha = item['dt_txt'],
+                            fecha = date_str,
                             descripcion = item['weather'][0]['description'],
                             lluvia = rain,
                             humedad = item['main']['humidity'],

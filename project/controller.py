@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, flash, request, url_for, redirect
-from project import app, db
+from project import app, db, login_manager
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from flask.ext.user import roles_required
 from .model import Departamento, Provincia, Ciudad, Manager, Mercado, Clima, Producto, Variedad, Precio, Noticia, bcrypt
@@ -370,6 +370,10 @@ def login():
             return redirect(url_for('homepage'))
 
     return render_template('manager/login.html', form=form)
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect(url_for('homepage'))
 
 @app.route('/logout')   # pragma: no cover
 @login_required   # pragma: no cover
