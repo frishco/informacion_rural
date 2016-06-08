@@ -1,6 +1,7 @@
 from flask_restful import Resource, Api
+from flask_restful import reqparse
 from project import mysql, api, conn
-from .model import Departamento, Provincia, Ciudad, Producto, Variedad, Clima, Noticia
+from .model import Departamento, Provincia, Ciudad, Producto, Variedad, Clima, Noticia, Precio, Mercado
 from sqlalchemy import desc
 from .parser import fecha_parser
 from datetime import datetime, timedelta
@@ -205,6 +206,49 @@ class GetCiudad(Resource):
         except Exception as e:
             return {'error': str(e)}
 
+class GetPreciosProducto(Resource):
+    def get(self, variedad_id):
+        try:
+            # Parse the arguments
+            parser = reqparse.RequestParser()
+            parser.add_argument('fechaI', type=str)
+            parser.add_argument('fechaF', type=str)
+            args = parser.parse_args()
+            _fechaI = args['fechaI']
+            _fechaF = args['fechaF']
+
+            #data = Precio.query.filter(Precio.fecha.between('2016-05-20', '2016-05-24'))
+            data = Precio.query.filter(Precio.fecha.between(_fechaI, _fechaF)).filter_by(variedad_idvariedad=variedad_id)
+            precios = []
+            for item in data:
+                mercado = Mercado.query.get(item.Mercado_idMercado)
+                ciudad = Ciudad.query.get(mercado.ciudad_idciudad)
+                variedad = Variedad.query.get(item.variedad_idvariedad)
+                producto = Producto.query.get(variedad.Producto_idProducto)
+                i = {
+                    'Fecha' : str(item.fecha),
+                    'Ciudad': ciudad.nombre,
+                    'Mercado': mercado.nombre,
+                    'mercado_id': mercado.idMercado,
+                    'Id' : item.idPrecio,
+                    'precio_max' : item.precio_max,
+                    'precio_min' : item.precio_min,
+                    'precio_promedio' : item.precio_promedio,
+                    'Variedad' : variedad.nombre,
+                    'Producto' : producto.nombre,
+                }
+                precios.append(i)
+
+            _fechaI = args['fechaI']
+            _fechaF = args['fechaF']
+
+            return {'fecha Inicial': args['fechaI'], 'fechaF': args['fechaF'], 'precios':precios}
+
+        except Exception as e:
+            return {'error': str(e)}
+
+
+
 class GetProductos(Resource):
     def get(self):
         try:
@@ -275,10 +319,11 @@ class GetNoticias(Resource):
             return {'StatusCode':'200','noticias':noticias}
         except Exception as e:
             return {'error': str(e)}
-GetClimaCiudadSemana
+
 api.add_resource(GetDepartamentos, '/getDepartamentos', methods=['GET',])
 api.add_resource(GetProductos, '/getProductos', methods=['GET',])
 api.add_resource(GetNoticias, '/getNoticias', methods=['GET',])
+api.add_resource(GetPreciosProducto, '/getPreciosProducto/<int:variedad_id>', methods=['GET',])
 api.add_resource(GetProvincias, '/getProvincias/<int:dep_id>', methods=['GET',])
 api.add_resource(GetCiudades, '/getCiudades/<int:prov_id>', methods=['GET',])
 api.add_resource(GetCiudad, '/getCiudad/<int:ciudad_id>', methods=['GET',])
